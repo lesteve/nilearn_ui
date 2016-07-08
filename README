@@ -1,0 +1,97 @@
+Nilearn_ui
+==========
+
+nilearn_ui generates a graphical interface for nilearn scripts
+This project is still in progress.
+
+Nilearn_ui is composed of four parts :
+
+* a script selection widget
+
+* a form for scripts parameters (updated when script selectin changed)
+
+* a report widget (for script documentation and results)
+
+* a logs widet (for showing script standard output during run)
+
+
+Requirements
+============
+
+- nilearn (and all its dependencies)
+
+- PyQT4
+
+- tempita
+
+- docutils
+
+- formlayout https://github.com/ajrichardson/formlayout branch nilearn_ui
+  at rev c6c7004bdc816d344a27931f5f13f5b670319c09
+
+
+How to launch Nilearn_ui
+========================
+
+in nilearn_ui directory::
+
+  python nilearn_ui.py
+
+
+
+How to registered a new script
+==============================
+
+see nilearn_ui/script/run_canica.py or nilearn_ui/script/run_canica.py
+
+Scripts must be saved in /Scripts directory.
+To be registered its name must start with ``run_`` and end with ``.py``
+This scripts needs a least a funtion having the same name as the script (without ''.py'').
+For example main funtion of run_canica.py is ``run_canica``.
+
+Graphical unit interface description is stored in main function docstring
+following this rules :
+
+* main function must have a docstring
+
+* docstring first line is used in the selection widget
+
+* a Parameter section is mandatory
+
+* each line in Parameter section must be formatted as::
+
+    parameter name: (default value) a description used by widget tooltip
+
+
+
+How to generate result report
+=============================
+
+Script main function return a tuple::
+
+  ('file', 'file://path_to_report.html'
+
+path_to_report.html is the path to a report html file that can be display
+in report widget.
+
+This report file can be generated using report API define in nilearn_ui/report
+Report use a template that can be feed up using report API
+
+* a ``Report`` object must be instanciated
+
+* some elements can be added to the section such as
+  - ``Paragraph``
+  - ``Image``
+  - ``Table``
+
+* when the report is finished it can be save into a file using ``save_html`` method
+
+
+
+TO DO
+=====
+
+- packaging
+- continuous integration
+- documentation
+- a tk backend

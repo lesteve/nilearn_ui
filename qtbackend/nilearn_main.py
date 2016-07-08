@@ -34,6 +34,13 @@ class ReportWidget(QtGui.QWidget):
         self.web.load(QUrl(url))
 
 
+def _suppress_tooltips(results):
+    """suppress tool tips in results dictionnary keys"""
+    for key in results.keys():
+        val = results.pop(key)
+        results[key.split('::')[0]] = val
+
+
 class ComputationForm(QtGui.QWidget, MainContainerMixin):
     result = 'dict'
     type = 'form'
@@ -71,6 +78,7 @@ class ComputationForm(QtGui.QWidget, MainContainerMixin):
         adict = collections.OrderedDict(datalist)
         print self.stacked_widget.currentWidget()
         result = self.stacked_widget.currentWidget().get()
+        _suppress_tooltips(result)
         if result:
             result['verbose'] = int(result.get('verbose', 0))
             print 'result: ', result

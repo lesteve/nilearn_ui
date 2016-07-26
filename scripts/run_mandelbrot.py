@@ -33,7 +33,7 @@ def generate_report(params_dict, img_src_filenames):
     report = api.Report()
 
     report.add(api.Section('Model parameters'),
-               api.Table(params_dict.iteritems(),
+               api.Table(params_dict.items(),
                          headers=('Parameter', 'Value')))
 
     for counter, filename in enumerate(img_src_filenames):

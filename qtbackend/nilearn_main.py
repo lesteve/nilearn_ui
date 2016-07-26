@@ -1,7 +1,10 @@
 import sys
 import collections
 import threading
-import Queue
+try:
+    from queue import Queue
+except ImportError:
+    from Queue import Queue
 import time
 import os.path as osp
 import tempfile
@@ -76,12 +79,12 @@ class ComputationForm(QtGui.QWidget, MainContainerMixin):
         computation_name = self.computation_names[self.stacked_widget.currentIndex()]
         datalist = COMPUTATIONS[computation_name]
         adict = collections.OrderedDict(datalist)
-        print self.stacked_widget.currentWidget()
+        print(self.stacked_widget.currentWidget())
         result = self.stacked_widget.currentWidget().get()
         _suppress_tooltips(result)
         if result:
             result['verbose'] = int(result.get('verbose', 0))
-            print 'result: ', result
+            print('result: ', result)
             return result
 
     def setCurrentIndex(self, index):
@@ -105,7 +108,7 @@ class ComputationWidget(QtGui.QWidget):
         def secure_computation_func(params):
             try:
                 results = computation_func(params)
-            except Exception, err:
+            except Exception as err:
                 queue.put(('txt',
                            'An error occured during computation\n % s' % err))
             else:
@@ -117,7 +120,7 @@ class ComputationWidget(QtGui.QWidget):
         try:
             sys.stdout = self.parent().progress_reporter
             sys.stderr = self.parent().progress_reporter
-            queue = Queue.Queue()
+            queue = Queue()
             compute_thread = threading.Thread(target=self._get_computation_func(queue),
                                               args=(params,))
             compute_thread.start()
@@ -129,9 +132,9 @@ class ComputationWidget(QtGui.QWidget):
         finally:
             sys.stdout, sys.stderr = stdout, stderr
         if results[0] == 'txt':
-            print "DONE : ", results[1]
+            print("DONE : ", results[1])
         elif results[0] == 'file':
-            print "DONE :", results[1]
+            print("DONE :", results[1])
             self.report.web.load(QUrl(results[1]))
 
 
@@ -199,7 +202,7 @@ class NilearnMainWindow(QtGui.QMainWindow):
         self.computation_widget.do_run(self.form.get())
 
     def show_documentation(self):
-        print "call show documentation"
+        print("call show documentation")
         computation_name = self.current_simulation()
         computation_func = FUNCTIONS[computation_name]
         documentation = computation_func.__doc__
@@ -210,9 +213,9 @@ class NilearnMainWindow(QtGui.QMainWindow):
             directory = tempfile.mkdtemp(prefix='tmp_nilearn_doc')
             filename = osp.join(directory, 'doc.html')
             prepare_report_directory(directory)
-            print '#'*20
-            print directory
-            print '#'*20
+            print('#'*20)
+            print(directory)
+            print('#'*20)
             report = get_report_from_doc(documentation)
             report.save_html(filename)
             self.computation_widget.report.load_url(filename)

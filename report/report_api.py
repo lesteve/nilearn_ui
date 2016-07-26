@@ -24,7 +24,8 @@ class Report(Container):
     def __init__(self):
         super(Report, self).__init__()
         self.template = tempita.Template.from_filename(
-            osp.join(TEMPLATES, 'main_template.html'))
+            osp.join(TEMPLATES, 'main_template.html'),
+            encoding='utf8')
 
     def get_sidebar_html(self):
         sidebar_template = tempita.Template(

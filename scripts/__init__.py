@@ -38,7 +38,7 @@ def _find_parameters_section(docstring):
     for start, end in find_sections_in_doc(docstring):
         if parameter_start is not None:
             return docstring[parameter_start:start]
-        if docstring[start:(start+end)/2] == 'Parameters':
+        if docstring[start:(start+end)//2] == 'Parameters':
             parameter_start = end + 1
     if parameter_start is not None:
         return  docstring[parameter_start:]
